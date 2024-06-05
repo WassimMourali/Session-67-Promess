@@ -18,7 +18,7 @@ myPromise.then(data => {
     console.log(data);
 }).catch(error => {
     console.error(error);
-});*/
+});
 
 function fetchUser(){ 
     return new Promise((resolve,reject)=>{
@@ -29,6 +29,7 @@ function fetchUser(){
     })
 };
 
+//chaining promesess
 function fetchPost(username){
     return new Promise((resolve,reject)=>
     setTimeout(()=>{
@@ -42,5 +43,117 @@ fetchUser().then(userData => {
 }).then(userPost => {
     console.log("userpost:",userPost);
 }).catch(error => {
+    console.error(error);
+});
+/*querry promesses : 
+--Promise.all
+--Promise.race
+
+//Promise.all
+const promess1 = new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve('result 1');
+    },1000)
+});
+
+const promess2 = new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve('result 2');
+    },3000)
+});
+const promess3 = new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve ('result 3');
+    },5000)
+});Promise.all([promess1,promess2,promess3]).then((result)=>{
+    console.log("result:",result);
+}).catch(error =>{
+    console.error(error);
+});
+
+//Promiss.race si resultat resolve
+const promess1 = new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve('first');
+    },1904)
+});
+
+const promess2 = new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve('second');
+    },1903)
+});
+const promess3 = new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve ('third');
+    },1902)
+});Promise.race([promess1,promess2,promess3]).then((resultat)=>{
+    console.log("Promise race (retour premiére promise effectué)",resultat);
+}).catch(error =>{
+    console.error(error);
+});
+
+//promess.race si resultat reject
+const promess1 = new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve('result 1');
+    },1000)
+});
+
+const promess2 = new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve('result 2');
+    },3000)
+});
+const promess3 = new Promise((resolve,reject)=>{
+    setTimeout(()=>{
+        reject ('pas de resultat promess numéro 3');
+    },5000)
+});Promise.all([promess1,promess2,promess3]).then((result)=>{
+    console.log("result:",result);
+}).catch(error =>{
+    console.error(error);
+});
+
+//customize = personnalisation de promess
+const customPromess = new Promise((resolve,reject)=>{
+    setTimeout(() => {
+        let sucess = false;
+        if(sucess){
+            resolve('resulat bien effectué');
+        }else {
+            reject('resulat non effectué correctement');
+        };
+    }, 2500);
+   
+});customPromess.then((message)=>{
+    console.log(message);
+}).catch((error)=>{
+    console.error(error);
+});
+
+//fetchnig
+function fetchData(url){
+return new Promise((resolve, reject) => {
+    fetch(url).then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            reject('Network response was not ok');
+        }
+    }).then(data => resolve(data)).catch(error => reject(error))
+})
+}
+fetchData('https://gorest.co.in/public/v2/users').then(data=> console.log(data)).catch(error => console.error('error fectching data:',error));*/
+
+async function fetchData(){
+    const reposne = await fetch('https://gorest.co.in/public/v2/users')
+    const data = await reposne.json();
+    return data;
+}
+fetchData().then((data)=>{
+    user = data.find(user=> user.id)
+    console.log('this result of async/await function:',user.email);
+}).catch((error)=>{
     console.error(error);
 });
